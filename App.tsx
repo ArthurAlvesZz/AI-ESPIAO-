@@ -3,8 +3,6 @@ import { AppState } from './types';
 import PhoneNumberInput from './components/PhoneNumberInput';
 import LoadingScreen from './components/LoadingScreen';
 import ResultsScreen from './components/ResultsScreen';
-import PaywallTransition from './components/PaywallTransition';
-import Paywall from './components/Paywall';
 
 const App: React.FC = () => {
   const [appState, setAppState] = useState<AppState>(AppState.Home);
@@ -19,12 +17,9 @@ const App: React.FC = () => {
     setAppState(AppState.Results);
   };
   
-  const handleUnlock = () => {
-    setAppState(AppState.PaywallTransition);
-  };
-  
-  const handleTransitionComplete = () => {
-    setAppState(AppState.Paywall);
+  const handleReset = () => {
+    setPhoneNumber('');
+    setAppState(AppState.Home);
   };
 
   const renderContent = () => {
@@ -34,11 +29,7 @@ const App: React.FC = () => {
       case AppState.Loading:
         return <LoadingScreen onComplete={handleLoadingComplete} />;
       case AppState.Results:
-        return <ResultsScreen onUnlock={handleUnlock} />;
-      case AppState.PaywallTransition:
-        return <PaywallTransition onComplete={handleTransitionComplete} />;
-      case AppState.Paywall:
-        return <Paywall phoneNumber={phoneNumber} />;
+        return <ResultsScreen phoneNumber={phoneNumber} onReset={handleReset} />;
       default:
         return <PhoneNumberInput onProceed={handleProceed} />;
     }
